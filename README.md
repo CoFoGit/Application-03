@@ -1,2 +1,12 @@
 # Application-03
+LINK TO WOKWI https://wokwi.com/projects/434515362220552193
 Alexander Barrass, 5346980 EEE 4775 Summer 2025 Application 3
+Engineering Analysis
+Q1: Using ISR and Semaphore allows us to integrate blocking which will keep the CPU from wasting time polling the task's relevant data when the button has yet to be pressed, saves CPU uptime when system is relatively inactive.
+Q2: We only use FromISR functions so that they can interact with hte ISR correctly. ISR must complete quickly and with regular RTOS, there may be blocking which can disturb ISR beyond use.
+Q3: ISR will run immediatly becuase it is an interrupt and then is followed by the higher priority Log Task which would then be followed by lower priority tasks like the sensor. Immediatly once the ISR is fired, the system gives the semaphore and requests the log data.
+Q4: Without pinning every task to core 1, there could be mistimes which we are directly trying to avoid becuase multiple cores could run at the same time potentially altering the order in which tasks are run/blocked.
+Q5: With the help of DEEPSEEK coding assistance, I implemented mutex protection meaning that the log task copies the data quickly. This operation ensures that sensor task does not change the data mid-read so that no data is lost or manipulated unintentionally.
+Q6: Changing the priority of the log task would put it behind less important tasks like the LED uptime task. This means that if we pressed the button, the log may not display until AFTER the next LED toggle which in this case is a lower priority task, ensuring the correct priority levels is detrimental to real time systems were the log of information could be more important then knowing that the system is up within ~1.4s.
+Q7: ISRs need to be short in operation becuase they can interrupt proper scheduling when integrated with lengthly procedures. In lab this can cause unintentional delays, causing cascading drift in accuracy and the scheduler can't properly run which can also contribute to latency within my system. It is notable to emphasize the importance of accurate timing with Hard RTS once again to explain the importance of all of these techniques.
+Q8: From the Chapter 7 focusing on ISR: "An ISR should do only what is absolutely necessary—defer processing to a task using a synchronization mechanism. This avoids starving other interrupts or tasks of CPU time." which relates to  the question 7 which emphasizes the quick implementation and runtime of ISRs to ensure accurate timing in the application.
